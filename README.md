@@ -1,6 +1,6 @@
 # Fisheries Supabase + PostGIS Starter
 
-This repository is now a **Next.js App Router** app integrated end-to-end with Supabase:
+This repository is a **Next.js App Router** app integrated end-to-end with Supabase:
 
 - Supabase Auth (email/password)
 - Supabase Postgres with PostGIS-enabled geospatial tables
@@ -19,11 +19,15 @@ cp .env.example .env.local
 Required variables:
 
 - `SUPABASE_URL` (Project Settings → API → Project URL)
-- `SUPABASE_ANON_KEY` (Project Settings → API → Project API keys → `anon`)
-- `SUPABASE_SERVICE_ROLE_KEY` (Project Settings → API → Project API keys → `service_role`) **server-only**
-- `DATABASE_URL` (optional direct DB connection string)
+- `SUPABASE_ANON_KEY` (legacy browser-safe key; optional if publishable key is used)
+- `SUPABASE_PUBLISHABLE_KEY` (recommended browser-safe key)
+- `SUPABASE_SERVICE_ROLE_KEY` (Project Settings → API → service_role key) **server-only**
+- `DATABASE_URL` (runtime pooled connection string)
+- `DIRECT_URL` (direct DB URL for migrations)
+- `POSTGRES_DIRECT_HOST_URL` (optional direct DB host URL)
 - `NEXT_PUBLIC_SUPABASE_URL` (same as `SUPABASE_URL`)
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` (same as `SUPABASE_ANON_KEY`)
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` (optional)
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (recommended)
 - `NEXT_PUBLIC_SITE_URL` (for auth redirects, e.g. `http://localhost:3000`)
 
 ### Redirect URLs
@@ -48,50 +52,19 @@ Open `http://localhost:3000`.
 
 The repository includes `supabase/config.toml` and SQL migrations under `supabase/migrations`.
 
-### Initialize CLI (first time only)
-
 ```bash
 supabase init
-```
-
-### Link to hosted project
-
-```bash
 supabase link --project-ref <your-project-ref>
-```
-
-### Start local Supabase stack
-
-```bash
 supabase start
-```
-
-### Apply migrations locally
-
-```bash
 supabase db reset
-```
-
-### Create a new migration
-
-```bash
 supabase migration new <migration_name>
-```
-
-### Push migrations to remote
-
-```bash
 supabase db push
 ```
 
 ## 4) What is implemented
 
-- Auth screens:
-  - `/login`
-  - `/signup`
-  - `/account` (protected)
-- Auth callback route:
-  - `/auth/callback`
+- Auth screens: `/login`, `/signup`, `/account` (protected)
+- Auth callback route: `/auth/callback`
 - Middleware route protection for `/account`
 - Data helpers:
   - `getCurrentUser()`
@@ -103,8 +76,8 @@ supabase db push
 
 ## 5) Security model
 
-- Browser uses only public anon key.
-- Server SSR logic uses anon key + secure cookies.
+- Browser uses only anon/publishable key.
+- Server SSR logic uses anon/publishable key + secure cookies.
 - Service role key exists only in `server-only` admin client.
 - RLS enabled on app tables.
 - Policies enforce per-user ownership and admin-only writes for zones.

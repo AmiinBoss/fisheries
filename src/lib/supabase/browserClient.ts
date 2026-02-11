@@ -5,5 +5,5 @@ import type { Database } from '@/lib/database.types';
 import { env } from '@/lib/env';
 
 export function createSupabaseBrowserClient() {
-  return createBrowserClient<Database>(env.supabaseUrl, env.supabaseAnonKey);
+  return createBrowserClient<Database>(env.supabaseUrl, env.supabasePublicKey);
 }
